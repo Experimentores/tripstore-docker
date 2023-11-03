@@ -8,6 +8,7 @@ images=(
 "yoimerdr/tripstore-cart-items-service"
 "yoimerdr/tripstore-products-service"
 "yoimerdr/tripstore-discovery-service"
+"yoimerdr/tripstore-config-service"
 )
 
 for name in "${images[@]}"
