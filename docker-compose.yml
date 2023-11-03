@@ -1,0 +1,114 @@
+version: "3.9"
+name: tripstore
+services:
+  discovery:
+    image: tripstore-discovery-service
+    container_name: discovery
+    ports:
+      - "8761:8761"
+
+  config:
+    image: tripstore-config-service
+    container_name: config
+    environment:
+      - EUREKA_SERVER=http://discovery:8761/eureka
+      - GIT_CONFIG_URL=https://github.com/Experimentores/config-server
+    depends_on:
+      - discovery
+    ports:
+      - "8760:8760"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://config:8760/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  products:
+    image: tripstore-products-service
+    container_name: products
+    depends_on:
+      config:
+        condition: service_healthy
+    ports:
+      - "8767:8767"
+    environment:
+      - DB_USERNAME=posgrest
+      - DB_PASSWORD=tripstore_1
+      - CONFIG_SERVER_PATH=http://config:8760/
+
+    restart: on-failure
+
+  cart-items:
+    image: tripstore-cart-items-service
+    container_name: cart-items
+    depends_on:
+      config:
+        condition: service_healthy
+    ports:
+      - "8766:8766"
+    environment:
+      - DB_USERNAME=posgrest
+      - DB_PASSWORD=tripstore_1
+      - CONFIG_SERVER_PATH=http://config:8760/
+
+    restart: on-failure
+
+  shopping-carts:
+    image: tripstore-shopping-carts-service
+    container_name: shopping-carts
+    depends_on:
+      config:
+        condition: service_healthy
+    ports:
+      - "8765:8765"
+    environment:
+      - DB_USERNAME=posgrest
+      - DB_PASSWORD=tripstore_1
+      - CONFIG_SERVER_PATH=http://config:8760/
+
+    restart: on-failure
+
+  orders:
+    image: tripstore-orders-service
+    container_name: orders
+    depends_on:
+      config:
+        condition: service_healthy
+    ports:
+      - "8763:8763"
+    environment:
+      - DB_USERNAME=posgrest
+      - DB_PASSWORD=tripstore_1
+      - CONFIG_SERVER_PATH=http://config:8760/
+
+    restart: on-failure
+
+  trips:
+    image: tripstore-trips-service
+    container_name: trips
+    depends_on:
+      config:
+        condition: service_healthy
+    ports:
+      - "8764:8764"
+    environment:
+      - DB_USERNAME=posgrest
+      - DB_PASSWORD=tripstore_1
+      - CONFIG_SERVER_PATH=http://config:8760/
+
+    restart: on-failure
+
+  users:
+    image: tripstore-users-service
+    container_name: users
+    depends_on:
+      config:
+        condition: service_healthy
+    ports:
+      - "8762:8762"
+    environment:
+      - DB_USERNAME=posgrest
+      - DB_PASSWORD=tripstore_1
+      - CONFIG_SERVER_PATH=http://config:8760/
+
+    restart: on-failure
