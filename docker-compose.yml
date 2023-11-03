@@ -1,5 +1,4 @@
-version: "3.9"
-name: tripstore
+version: "3"
 services:
   discovery:
     image: tripstore-discovery-service
