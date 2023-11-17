@@ -17,7 +17,7 @@ services:
     ports:
       - "8760:8760"
     healthcheck:
-      test: [ "CMD", "curl", "-sS", "http://config:8760/actuator/health", "|| exit 1" ]
+      test: [ "CMD", "curl", "-f", "http://config:8760/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,8 +26,8 @@ services:
     image: tripstore-products-service
     container_name: products
     depends_on:
-      - config
-      - discovery
+      config:
+        condition: service_healthy
     ports:
       - "8767:8767"
     environment:
@@ -41,8 +41,8 @@ services:
     image: tripstore-cart-items-service
     container_name: cart-items
     depends_on:
-      - config
-      - discovery
+      config:
+        condition: service_healthy
     ports:
       - "8766:8766"
     environment:
@@ -56,8 +56,8 @@ services:
     image: tripstore-shopping-carts-service
     container_name: shopping-carts
     depends_on:
-      - config
-      - discovery
+      config:
+        condition: service_healthy
     ports:
       - "8765:8765"
     environment:
@@ -71,8 +71,8 @@ services:
     image: tripstore-orders-service
     container_name: orders
     depends_on:
-      - config
-      - discovery
+      config:
+        condition: service_healthy
     ports:
       - "8763:8763"
     environment:
@@ -86,8 +86,8 @@ services:
     image: tripstore-trips-service
     container_name: trips
     depends_on:
-      - config
-      - discovery
+      config:
+        condition: service_healthy
     ports:
       - "8764:8764"
     environment:
@@ -101,10 +101,15 @@ services:
     image: tripstore-users-service
     container_name: users
     depends_on:
-      - config
-      - discovery
+      config:
+        condition: service_healthy
     ports:
       - "8762:8762"
+    healthcheck:
+      test: [ "CMD", "curl", "--head", "http://users:8762/api/tripstore/v1/users/healthcheck" ]
+      interval: 20s
+      timeout: 5s
+      retries: 5
     environment:
       - DB_USERNAME=posgrest
       - DB_PASSWORD=tripstore_1
@@ -116,8 +121,10 @@ services:
     image: tripstore-gateway-service
     container_name: gateway
     depends_on:
-      - config
-      - discovery
+      config:
+        condition: service_healthy
+      users:
+        condition: service_healthy
     ports:
       - "8768:8768"
     environment:
