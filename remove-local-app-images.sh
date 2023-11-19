@@ -1,15 +1,15 @@
 #!/bin/bash
 # repository/image-name:version
 images=(
-"yoimerdr/tripstore-users-service"
-"yoimerdr/tripstore-orders-service"
-"yoimerdr/tripstore-trips-service"
-"yoimerdr/tripstore-shopping-carts-service"
-"yoimerdr/tripstore-cart-items-service"
-"yoimerdr/tripstore-products-service"
-"yoimerdr/tripstore-discovery-service"
-"yoimerdr/tripstore-config-service"
-"yoimerdr/tripstore-gateway-service"
+"tripstore-users-service"
+"tripstore-orders-service"
+"tripstore-trips-service"
+"tripstore-shopping-carts-service"
+"tripstore-cart-items-service"
+"tripstore-products-service"
+"tripstore-discovery-service"
+"tripstore-config-service"
+"tripstore-gateway-service"
 )
 
 for name in "${images[@]}"
