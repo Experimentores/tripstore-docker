@@ -107,7 +107,7 @@ services:
       - "8762:8762"
     healthcheck:
       test: [ "CMD", "curl", "--head", "http://users:8762/api/tripstore/v1/users/healthcheck" ]
-      interval: 20s
+      interval: 60s
       timeout: 5s
       retries: 5
     environment:
